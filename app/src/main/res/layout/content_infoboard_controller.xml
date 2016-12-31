@@ -25,7 +25,8 @@
         android:text="@string/statusNoConnection"
         android:gravity="left|center_vertical"
         android:textColor="#fff"
-        style="@style/Widget.AppCompat.Button.Borderless" />
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:elevation="4dp" />
 
     <com.github.aakira.expandablelayout.ExpandableLinearLayout
         android:id="@+id/statusbarContent"
@@ -39,7 +40,8 @@
         app:ael_expanded="false"
         app:ael_interpolator="linear"
         app:ael_orientation="vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:translationZ="4dp">
 
         <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/statusbarViewHandler"
@@ -64,7 +66,7 @@
         android:text="@string/weatherTitleText"
         android:gravity="left|center_vertical"
         android:textColor="#000"
-        android:elevation="0dp"
+        android:elevation="4dp"
         style="@style/Widget.AppCompat.Button.Borderless" />
 
     <com.github.aakira.expandablelayout.ExpandableLinearLayout
@@ -83,7 +85,8 @@
         app:ael_interpolator="linear"
         app:ael_orientation="vertical"
         android:orientation="vertical"
-        app:ael_expanded="false">
+        app:ael_expanded="false"
+        android:translationZ="4dp">
 
         <include layout="@layout/weather_settings"/>
 
