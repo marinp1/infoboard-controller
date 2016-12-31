@@ -24,7 +24,8 @@
         android:paddingRight="16dp"
         android:text="@string/statusNoConnection"
         android:gravity="left|center_vertical"
-        android:textColor="#fff" />
+        android:textColor="#fff"
+        style="@style/Widget.AppCompat.Button.Borderless" />
 
     <com.github.aakira.expandablelayout.ExpandableLinearLayout
         android:id="@+id/statusbarContent"
@@ -63,7 +64,29 @@
         android:text="@string/weatherTitleText"
         android:gravity="left|center_vertical"
         android:textColor="#000"
-        android:elevation="10dp"
-        />
+        android:elevation="0dp"
+        style="@style/Widget.AppCompat.Button.Borderless" />
+
+    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+        android:id="@+id/weatherSettingsContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weatherSettingsButton"
+        android:background="@android:color/white"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
+        android:paddingTop="4dp"
+        android:layout_marginBottom="10dp"
+        android:elevation="0dp"
+        app:ael_duration="100"
+        app:ael_interpolator="linear"
+        app:ael_orientation="vertical"
+        android:orientation="vertical"
+        app:ael_expanded="false">
+
+        <include layout="@layout/weather_settings"/>
+
+    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
 
 </RelativeLayout>

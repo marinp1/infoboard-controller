@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.ViewFlipper;
 
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
@@ -31,6 +32,7 @@ public class InfoboardController extends AppCompatActivity {
 
     // ====================== WEATHER VARIABLES =======================
     Button weatherSettingsButton;
+    ExpandableLinearLayout weatherSettingsContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,8 @@ public class InfoboardController extends AppCompatActivity {
 
         // ========================= BLUETOOTH INIT ===================================
 
-        bluetoothCommunicator = new BluetoothCommunicator(this);
+        //FIXME: Enable for bluetooth functionality
+        //bluetoothCommunicator = new BluetoothCommunicator(this);
 
         // ========================== STATUSBAR INIT =====================================
 
@@ -54,20 +57,26 @@ public class InfoboardController extends AppCompatActivity {
 
         statusbarContent = (ExpandableLinearLayout) findViewById(R.id.statusbarContent);
 
+        // ========================== WEATHER INIT ======================================
+        weatherSettingsButton = (Button) findViewById(R.id.weatherSettingsButton);
+
+        weatherSettingsContent = (ExpandableLinearLayout) findViewById(R.id.weatherSettingsContent);
+        weatherSettingsContent.collapse();
+
+        // =========================== FINAL INIT ==============================
+
         // Add listener when the layout is loaded so children size may be calculated correctly
-        statusbarContent.getViewTreeObserver().addOnGlobalLayoutListener(
+        final RelativeLayout mainView = (RelativeLayout) findViewById(R.id.content_infoboard_controller);
+        mainView.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
                         // only want to do this once
-                        statusbarContent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        mainView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         statusbarContent.initLayout();
+                        weatherSettingsContent.initLayout();
                     }
                 });
-
-        // ========================== WEATHER INIT ======================================
-        weatherSettingsButton = (Button) findViewById(R.id.weatherSettingsButton);
-
     }
 
 
@@ -108,7 +117,7 @@ public class InfoboardController extends AppCompatActivity {
 
     /**
      * Handles expand action on statusbar
-     * @param view
+     * @param view the main view of the application
      */
     public void statusbarClick(View view) {
         // Don't expand if the application is connecting
@@ -178,6 +187,7 @@ public class InfoboardController extends AppCompatActivity {
     // =============== WEATHER PANEL ====================
 
     public void toggleWeatherPanel(View view) {
-        //TODO: Do something
+        weatherSettingsContent.toggle();
+        weatherSettingsContent.initLayout();
     }
 }
