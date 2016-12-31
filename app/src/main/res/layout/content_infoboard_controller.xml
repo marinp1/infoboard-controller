@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_infoboard_controller"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="fi.patrikmarin.infoboard.controller.InfoboardController"
+    tools:showIn="@layout/activity_infoboard_controller">
+
+    <Button
+        android:id="@+id/statusbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorStatusNoConnection"
+        android:drawableRight="@android:drawable/arrow_down_float"
+        android:onClick="statusbarClick"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/statusNoConnection"
+        android:gravity="left|center_vertical"
+        android:textColor="#fff" />
+
+    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+        android:id="@+id/statusbarContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/statusbar"
+        android:background="@color/colorStatusNoConnection"
+        android:padding="16dp"
+        android:layout_marginBottom="10dp"
+        app:ael_duration="100"
+        app:ael_expanded="false"
+        app:ael_interpolator="linear"
+        app:ael_orientation="vertical"
+        android:orientation="vertical">
+
+        <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/statusbarViewHandler"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <include layout="@layout/statusbar_noconnection"/>
+            <include layout="@layout/statusbar_connected"/>
+
+        </ViewFlipper>
+    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+    <Button
+        android:id="@+id/weatherSettingsButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/statusbarContent"
+        android:background="@android:color/white"
+        android:onClick="toggleWeatherPanel"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/weatherTitleText"
+        android:gravity="left|center_vertical"
+        android:textColor="#000"
+        android:elevation="10dp"
+        />
+
+</RelativeLayout>

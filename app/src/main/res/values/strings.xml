@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Infoboard Controller</string>
+    <string name="statusNoConnection">Not connected</string>
+    <string name="statusConnecting">Connecting...</string>
+    <string name="statusConnected">Connected</string>
+    <string name="connectButton">Connect to Infoboard</string>
+    <string name="weatherTitleText">Weather</string>
+</resources>

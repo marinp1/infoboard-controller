@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="fi.patrikmarin.infoboard.controller.InfoboardController">
+    <item
+        android:id="@+id/setNoConnection"
+        android:orderInCategory="1"
+        android:title="No Connection"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/setConnecting"
+        android:orderInCategory="2"
+        android:title="Connecting"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/setConnected"
+        android:orderInCategory="3"
+        android:title="Connected"
+        app:showAsAction="never" />
+</menu>
