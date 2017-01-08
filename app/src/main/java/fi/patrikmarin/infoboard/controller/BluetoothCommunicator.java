@@ -1,8 +1,13 @@
 package fi.patrikmarin.infoboard.controller;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 
 import java.io.OutputStream;
 import java.util.UUID;
@@ -12,7 +17,7 @@ import java.util.UUID;
  */
 
 // FIXME: Fix threads
-public class BluetoothCommunicator {
+public class BluetoothCommunicator extends Activity {
 
     InfoboardController controller;
     BluetoothCommunicator bluetoothCommunicator = this;
@@ -35,9 +40,35 @@ public class BluetoothCommunicator {
     public BluetoothCommunicator(InfoboardController controller) {
         this.controller = controller;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        bluetoothAdapter.startDiscovery();
+
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(mReceiver, filter);
+
         initListener();
         selectRemoteDevice();
         // TODO: Prompt if bluetooth is not enabled
+    }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                BluetoothDevice device = intent
+                        .getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                System.out.println(device.getAddress());
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        stopReceiving();
+        super.onDestroy();
+    }
+
+    public void stopReceiving() {
+        unregisterReceiver(mReceiver);
     }
 
     public void selectRemoteDevice() {
