@@ -6,9 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by marinp1 on 5.1.2017.
@@ -16,11 +14,16 @@ import java.util.HashMap;
 
 public class DeviceSearchDialog extends DialogFragment {
 
+    public static InfoboardController infoboardController;
+
     public DeviceSearchDialog() {
 
     }
 
-    public static DeviceSearchDialog newInstance(ArrayList<String> discoveredDevices, ArrayList<String> deviceIds) {
+    public static DeviceSearchDialog newInstance(ArrayList<String> discoveredDevices, ArrayList<String> deviceIds, InfoboardController controller) {
+
+        infoboardController = controller;
+
         DeviceSearchDialog fragment = new DeviceSearchDialog();
         Bundle args = new Bundle();
         args.putString("title", "Device list");
@@ -34,6 +37,8 @@ public class DeviceSearchDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        super.onCreateDialog(savedInstanceState);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         String title = getArguments().getString("title");
@@ -43,10 +48,16 @@ public class DeviceSearchDialog extends DialogFragment {
         final ArrayList<String> devices = getArguments().getStringArrayList("devices");
         final ArrayList<String> deviceIds = getArguments().getStringArrayList("deviceIds");
 
-        builder.setItems((String[]) devices.toArray(),
+        builder.setItems(devices.toArray(new String[devices.size()]),
             new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    System.out.println(deviceIds.get(which));
+                    DeviceSearchDialog.infoboardController.bluetoothCommunicator.SERVER_ADDRESS = deviceIds.get(which);
+
+                    System.out.println("DEVICE " + devices.get(which) + "(" + deviceIds.get(which) + ") SELECTED");
+
+                    DeviceSearchDialog.infoboardController.SEARCH_FOR_SERVER = false;
+
+                    dialog.dismiss();
                 }
             });
 
@@ -60,4 +71,32 @@ public class DeviceSearchDialog extends DialogFragment {
         // Create the AlertDialog object and return it
         return builder.create();
     }
+
+    /*
+    private void updateLoop() {
+
+        final Thread listener;
+
+        listener = new Thread() {
+            public void run() {
+                while (bluetoothCommunicator.isDiscovering()) {
+
+                    try {
+
+                        Thread.sleep(100);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                interrupt();
+
+            }
+        };
+
+        listener.start();
+    }
+    */
 }

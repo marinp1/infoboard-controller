@@ -1,28 +1,24 @@
 package fi.patrikmarin.infoboard.controller;
 
-import android.app.DialogFragment;
-import android.content.Context;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ViewFlipper;
 
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
-
-import java.util.ArrayList;
 
 import static android.R.drawable.arrow_down_float;
 import static android.R.drawable.arrow_up_float;
@@ -31,7 +27,7 @@ public class InfoboardController extends AppCompatActivity {
 
     // ==================== BLUETOOTH CONNECTION ====================================
     BluetoothCommunicator bluetoothCommunicator;
-    private static Boolean SEARCH_FOR_SERVER= true;
+    public static Boolean SEARCH_FOR_SERVER = true;
 
     // ========================= STATUSBAR VARIABLES =================================
     ExpandableLinearLayout statusbarContent;
@@ -40,9 +36,17 @@ public class InfoboardController extends AppCompatActivity {
     // 0 = no connection, 1 = connecting, 2 = connected
     int statusID = 0;
 
+    int MY_PERMISSIONS_REQUEST_FINE_LOCATION = -1;
+
     // ====================== WEATHER VARIABLES =======================
     Button weatherSettingsButton;
     ExpandableLinearLayout weatherSettingsContent;
+
+    @Override
+    protected void onDestroy() {
+        bluetoothCommunicator.stopReceiving();
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +59,24 @@ public class InfoboardController extends AppCompatActivity {
 
         // ========================= BLUETOOTH INIT ===================================
 
-        //FIXME: Enable for bluetooth functionality
-        bluetoothCommunicator = new BluetoothCommunicator(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            switch (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+                case PackageManager.PERMISSION_DENIED:
+
+                    ActivityCompat.requestPermissions(bluetoothCommunicator.controller,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+
+                    bluetoothCommunicator = new BluetoothCommunicator(this);
+
+                    break;
+
+                case PackageManager.PERMISSION_GRANTED:
+                    bluetoothCommunicator = new BluetoothCommunicator(this);
+                    break;
+            }
+        }
 
         // ========================== STATUSBAR INIT =====================================
 
@@ -123,14 +143,8 @@ public class InfoboardController extends AppCompatActivity {
 
         if (SEARCH_FOR_SERVER) {
 
-            ArrayList<String> foundDevices = new ArrayList<String>();
-            ArrayList<String> foundIds = new ArrayList<String>();
-
-            foundDevices.add("helo");
-            foundIds.add("heelo");
-
             FragmentManager fm = getSupportFragmentManager();
-            DeviceSearchDialog deviceSearchDialog = DeviceSearchDialog.newInstance(foundDevices, foundIds);
+            DeviceSearchDialog deviceSearchDialog = DeviceSearchDialog.newInstance(bluetoothCommunicator.foundDevices, bluetoothCommunicator.foundIds, this);
             deviceSearchDialog.show(getSupportFragmentManager(), "fm_name");
 
         } else {
